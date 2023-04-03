@@ -1,0 +1,177 @@
+<div class="grid">
+    <div class="col-12">
+        <div class="card">
+ 
+ <p-toast></p-toast>
+
+
+    <p-toolbar styleClass="p-mb-4">
+        <ng-template pTemplate="left">
+            <button pButton pRipple label="New" icon="pi pi-plus" class="p-button-success p-mr-2" (click)="openNew()"></button>
+            <button pButton pRipple  icon="pi pi-trash" class="p-button-danger" (click)="deleteSelectedEmplacement()" [disabled]="!selectedEmplacements || !selectedEmplacements.length"></button>
+        </ng-template>
+
+        <ng-template pTemplate="right">
+            <p-fileUpload mode="basic" accept="image/*" [maxFileSize]="1000000" label="Import" chooseLabel="Import" class="p-mr-2 p-d-inline-block"></p-fileUpload>
+            <button pButton pRipple label="Export" icon="pi pi-upload" class="p-button-help"></button>
+        </ng-template>
+    </p-toolbar>
+
+    <p-table #dt [value]="emplacements" responsiveLayout="scroll"  [rows]="10"
+     
+      [globalFilterFields]="['Designation','Actif','CodeEmpl','J_ddm','idSite','idTypeEmpl','Emp_Pere']"
+      [rows]="10" [paginator]="true"
+        [(selection)]="selectedEmplacements" [rowHover]="true" dataKey="id"
+        currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries"
+         [showCurrentPageReport]="true">
+     
+        <ng-template pTemplate="header">
+            <tr>
+                <th style="width: 3rem">
+                    <p-tableHeaderCheckbox></p-tableHeaderCheckbox>
+                </th>
+                <th pSortableColumn="CodeEmpl">Code<p-sortIcon field="CodeEmpl"></p-sortIcon></th>
+                <th pSortableColumn="Designation">Designation <p-sortIcon field="Designation"></p-sortIcon></th>
+               
+                <th pSortableColumn="Designation">Type Emplacement <p-sortIcon field="Designation"></p-sortIcon></th>
+               
+                
+               <th pSortableColumn="Emp_Pere">Emplacement <p-sortIcon field="Emp_Pere"></p-sortIcon></th>
+
+               <th pSortableColumn="Designation">Site <p-sortIcon field="Designation"></p-sortIcon></th>
+              
+
+                <th></th>
+            </tr>
+        </ng-template>
+        <ng-template pTemplate="body" let-emplacement>
+            <tr>
+                <td>
+                    <p-tableCheckbox [value]="emplacement"></p-tableCheckbox>
+                </td>
+                <td>{{emplacement.Designation}}</td>
+                <td>{{emplacement.CodeEmpl}}</td>
+                <td>{{emplacement.Designationtype}}</td> 
+                <td>{{emplacement.Emp_Pere}}</td>
+                 <td>{{emplacement.Designationsite}}</td>
+                
+                <td>
+                    <button pButton pRipple icon="pi pi-pencil" class="p-button-rounded p-button-success p-mr-2" (click)="editEmplacement(emplacement)"></button>
+                    <button pButton pRipple icon="pi pi-trash" class="p-button-rounded p-button-warning" (click)="onDelete(emplacement)"></button>
+                </td>
+            </tr>
+        </ng-template>
+        <ng-template pTemplate="summary">
+            <div class="p-d-flex p-ai-center p-jc-between">
+                In total there are {{emplacements ? emplacements.length : 0 }} emplacements.
+            </div>
+        </ng-template>
+    </p-table>
+</div>
+<!-- 
+<p-dialog [(visible)]="emplacementDialog" [style]="{width: '450px'}" header="emplacement Details" [modal]="true" styleClass="p-fluid">
+    <ng-template pTemplate="content" *ngIf="emplacementFormGroupe">
+        
+       <form [formGroup]="emplacementFormGroupe">
+        <div class="form-group" >
+            <label>Designation</label>
+            <input type="text" name="Designation" pInputText formControlName="Designation" />
+            
+        </div>
+        <div class="form-group">
+            <label >Actif</label>
+            <input name="Actif" pInputTextarea  rows="3" formControlName="Actif" cols="20"/>
+        </div>
+        <div class="form-group">
+            <label >CodeEmpl</label>
+            <input name="CodeEmpl" pInputTextarea  rows="3" formControlName="CodeEmpl" cols="20"/>
+        </div>
+        <div class="form-group">
+            <label >J_ddm</label>
+            <input name="J_ddm" pInputTextarea  rows="3" formControlName="J_ddm" cols="20"/>
+        </div>
+        <div class="form-group">
+            <label >site</label>
+            <input name="idSite" pInputTextarea  rows="3" formControlName="idSite" cols="20"/>
+        </div>
+        <div class="form-group">
+            <label >TypeEmplacement</label>
+            <input name="idTypeEmpl" pInputTextarea  rows="3" formControlName="idTypeEmpl" cols="20"/>
+        </div>
+      
+
+    </form>
+
+      
+    </ng-template>
+    
+    <ng-template pTemplate="footer">
+        <button pButton pRipple label="Cancel" icon="pi pi-times" class="p-button-text" (click)="hideDialog()"></button>
+        <button pButton pRipple label="Save" icon="pi pi-check" class="p-button-text" (click)="saveEmplacement()"></button>
+    </ng-template>
+</p-dialog> -->
+
+<p-dialog [(visible)]="emplacementDialog" [style]="{width: '450px'}" header="Emplacement Details" [modal]="true" styleClass="p-fluid">
+    <ng-template pTemplate="content" *ngIf="emplacementFormGroupe">
+          
+       <form [formGroup]="emplacementFormGroupe">
+        <div class="form-group">
+            <label for="CodeEmpl">Code</label>
+            <input type="text" id="CodeEmpl" pInputText name="CodeEmpl"  formControlName="CodeEmpl"  />
+            
+        </div>
+        <div class="form-group">
+            <label for="Designation">Designation</label>
+            <input type="text" id="Designation" pInputText name="Designation"  formControlName="Designation"  />
+           
+        </div>
+        
+        <div class="form-group" >
+    <label class="col-sm-4 col-form-label">typeemplacement</label>
+        <div class="form-group row">
+            
+            
+            <div class="col-sm-12">
+                <select id="idTypeEmpl"  class="form-control" formControlName="idTypeEmpl">
+                    <option *ngFor="let s of typeemplacements" value="{{s.id}}">{{s.Designation}}</option>
+                 
+                </select>
+            </div>
+        </div>
+        </div>
+
+        <div class="form-group" >
+        <label class="col-sm-4 col-form-label">Emplacement Pere</label>
+            <div class="form-group row">
+                
+                
+                <div class="col-sm-12">
+                    <select id="Emp_Pere"  class="form-control" formControlName="Emp_Pere">
+                        <option *ngFor="let s of emplacements" value="{{s.Designation}}">{{s.Designation}}</option>
+                     
+                    </select>
+                </div>
+            </div>
+        </div>
+        <div class="form-group">
+       <label class="col-sm-4 col-form-label">Site</label>
+            
+        <div class="form-group row">
+          
+            <div class="col-sm-12">
+                <select id="idSite"  class="form-control" formControlName="idSite">
+                    <option *ngFor="let s of sites" value="{{s.id}}">{{s.Designation}}</option>
+                 
+                </select>
+            </div>
+        </div>
+        </div>
+       </form>
+    </ng-template>
+    
+    <ng-template pTemplate="footer">
+        <button pButton pRipple label="Cancel" icon="pi pi-times" class="p-button-text" (click)="hideDialog()"></button>
+        <button pButton pRipple label="Save" icon="pi pi-check" class="p-button-text" (click)="saveEmplacement()"></button>
+    </ng-template>
+</p-dialog>
+        </div></div>

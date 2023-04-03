@@ -1,0 +1,163 @@
+<p-toast></p-toast>
+
+<div class="card">
+    <p-toolbar styleClass="p-mb-4">
+        <ng-template pTemplate="left">
+            <button pButton pRipple label="New" icon="pi pi-plus" class="p-button-success p-mr-2" (click)="openNew()"></button>
+            <button pButton pRipple  icon="pi pi-trash" class="p-button-danger" (click)="deleteSelectedModelOperation()" [disabled]="!selectedModeloperations || !selectedModeloperations.length"></button>
+            
+<p-multiSelect [options]="cols" [(ngModel)]="selectedModeloperations" defaultLabel="Select a Model Operation" optionLabel="field"
+	display="chip"></p-multiSelect>
+        </ng-template>
+
+        <ng-template pTemplate="right">
+            <p-fileUpload mode="basic" accept="image/*" [maxFileSize]="1000000" label="Import" chooseLabel="Import" class="p-mr-2 p-d-inline-block"></p-fileUpload>
+            <button pButton pRipple label="Export" icon="pi pi-upload" class="p-button-help"></button>
+        </ng-template>
+    </p-toolbar>
+
+    <p-table #dt [value]="modeloperations" [rows]="10" [paginator]="true" [columns]="selectedModeloperations"
+        [(selection)]="selectedModeloperations" [rowHover]="true" dataKey="id"
+        currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries" [showCurrentPageReport]="true">
+     
+        <ng-template pTemplate="header" let-columns>
+            <tr>
+                <th *ngFor="let col of columns">
+                    {{col.header}}
+                </th>
+                
+                <th *ngIf="selectedModeloperations.length>0">Action</th>
+            </tr>
+        </ng-template>
+        <ng-template pTemplate="body" let-modeloperation let-columns="columns">
+            <tr>
+                
+                    <td *ngFor="let col of columns">
+                        {{modeloperation[col.field]}}
+                        
+                    </td>
+                
+              
+                <td *ngIf="selectedModeloperations.length>0">
+                    <button pButton pRipple icon="pi pi-pencil" class="p-button-rounded p-button-success p-mr-2" (click)="editModelOperation(modeloperation)"></button>
+                    <button pButton pRipple icon="pi pi-trash" class="p-button-rounded p-button-warning" (click)="onDelete(modeloperation)"></button>
+                </td>
+            </tr>
+        </ng-template>
+        <ng-template pTemplate="summary">
+            <div class="p-d-flex p-ai-center p-jc-between">
+                In total there are {{modeloperations ? modeloperations.length : 0 }} modeloperations.
+            </div>
+        </ng-template>
+    </p-table>
+</div>
+
+<p-dialog [(visible)]="modeloperationDialog" [style]="{width: '450px'}" header="Model Operation Details" [modal]="true" styleClass="p-fluid">
+    <ng-template pTemplate="content" *ngIf="modeloperationFormGroupe">
+        
+       <form [formGroup]="modeloperationFormGroupe">
+        <div class="form-group">
+            <div class="p-field p-col-12 p-md-6">
+                <label for="Date_Operation">Date_Operation</label>
+                <p-calendar formControlName="Date_Operation" [showTime]="true" inputId="Date_Operation"></p-calendar>
+            </div>
+        </div>
+        <div class="form-group" > 
+             <div class="p-field p-col-12 p-md-4">
+            <label class="col-sm-4 col-form-label">Equipement</label>
+             <div class="form-group row">
+                 
+                 <div class="col-sm-12 p-md-6">
+                     <select id="id_equip"  class="form-control" formControlName="id_equip">
+                         <option *ngFor="let s of equipements" value="{{s.id}}">{{s.Designation}}</option>
+                     </select>
+                 </div>
+             </div>
+            </div>
+    </div>
+        <div class="form-group" > 
+            <label>Code_Etat_Maint</label>
+            <input type="text" name="Code_Etat_Maint" pInputText formControlName="Code_Etat_Maint" />
+        </div>
+        <div class="form-group" > 
+            <label>User_Creation</label>
+            <input type="text" name="User_Creation" pInputText formControlName="User_Creation" />
+        </div>
+        <div class="form-group" > 
+            <label>Observ_Piece</label>
+            <input type="text" name="Observ_Piece" pInputText formControlName="Observ_Piece" />
+        </div>
+        <div class="form-group" > 
+            <label>Observ</label>
+            <input type="text" name="Observ" pInputText formControlName="Observ" />
+        </div>
+        <div class="form-group" > 
+            <label>Etat_Equipement</label>
+            <input type="text" name="Etat_Equipement" pInputText formControlName="Etat_Equipement" />
+        </div>
+        <div class="form-group" > 
+            <label>idArticle</label>
+            <input type="text" name="idArticle" pInputText formControlName="idArticle" />
+        </div>
+        <div class="form-group" > 
+            <label>OrigineP</label>
+            <input type="text" name="OrigineP" pInputText formControlName="OrigineP" />
+        </div>
+        <div class="form-group" > 
+            <label>CodeOperation</label>
+            <input type="text" name="CodeOperation" pInputText formControlName="CodeOperation" />
+        </div>
+        
+        <div class="form-group">
+            <div class="p-field p-col-12 p-md-6">
+                <label for="J_ddm">J_ddm</label>
+                <p-calendar formControlName="J_ddm" [showTime]="true" inputId="J_ddm"></p-calendar>
+            </div>
+        </div>
+        <div class="form-group" > 
+            <label>Id_Intervention</label>
+            <input type="text" name="Id_Intervention" pInputText formControlName="Id_Intervention" />
+        </div>
+        <div class="form-group" > 
+            <label>Designation</label>
+            <input type="text" name="Designation" pInputText formControlName="Designation" />
+        </div>
+        <div class="form-group" > 
+            <label>Interne</label>
+            <input type="text" name="Interne" pInputText formControlName="Interne" />
+        </div>
+        <div class="form-group" > 
+            <label>idDocument</label>
+            <input type="text" name="idDocument" pInputText formControlName="idDocument" />
+        </div>
+        <div class="form-group">
+            <div class="p-field p-col-12 p-md-6">
+                <label for="Date_Deb_Rea">Date_Deb_Rea</label>
+                <p-calendar formControlName="Date_Deb_Rea" [showTime]="true" inputId="Date_Deb_Rea"></p-calendar>
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="p-field p-col-12 p-md-6">
+                <label for="Date_Fin_Rea">Date_Fin_Rea</label>
+                <p-calendar formControlName="Date_Fin_Rea" [showTime]="true" inputId="Date_Fin_Rea"></p-calendar>
+            </div>
+        </div>
+       
+        
+        
+        
+     
+      
+
+    </form>
+
+      
+    </ng-template>
+    
+    <ng-template pTemplate="footer">
+        <button pButton pRipple label="Cancel" icon="pi pi-times" class="p-button-text" (click)="hideDialog()"></button>
+        <button pButton pRipple label="Save" icon="pi pi-check" class="p-button-text" (click)="SaveModelOperation()"></button>
+    </ng-template>
+</p-dialog>
+
+<p-confirmDialog [style]="{width: '450px'}"></p-confirmDialog>

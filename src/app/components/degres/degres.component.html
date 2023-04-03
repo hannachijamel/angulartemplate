@@ -1,0 +1,93 @@
+<p-toast></p-toast>
+
+<div class="card">
+    <p-toolbar styleClass="p-mb-4">
+        <ng-template pTemplate="left">
+            <button pButton pRipple label="New" icon="pi pi-plus" class="p-button-success p-mr-2" (click)="openNew()"></button>
+            <button pButton pRipple  icon="pi pi-trash" class="p-button-danger" (click)="deleteSelectedDegre()" [disabled]="!selectedDegres || !selectedDegres.length"></button>
+        </ng-template>
+
+        <ng-template pTemplate="right">
+            <p-fileUpload mode="basic" accept="image/*" [maxFileSize]="1000000" label="Import" chooseLabel="Import" class="p-mr-2 p-d-inline-block"></p-fileUpload>
+            <button pButton pRipple label="Export" icon="pi pi-upload" class="p-button-help"></button>
+        </ng-template>
+    </p-toolbar>
+
+    <p-table #dt [value]="degres" [rows]="10" [paginator]="true" [globalFilterFields]="['Code','Designation','OrderDegres']"
+        [(selection)]="selectedDegres" [rowHover]="true" dataKey="id"
+        currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries" [showCurrentPageReport]="true">
+     
+        <ng-template pTemplate="header">
+            <tr>
+                <th style="width: 3rem">
+                    <p-tableHeaderCheckbox></p-tableHeaderCheckbox>
+                </th> 
+                 <th pSortableColumn="Code">Code <p-sortIcon field="Code"></p-sortIcon></th>
+                <th pSortableColumn="Designation">Designation <p-sortIcon field="Designation"></p-sortIcon></th>
+                <th pSortableColumn="OrderDegres">Order Degres <p-sortIcon field="OrderDegres"></p-sortIcon></th>
+               
+                <th></th>
+            </tr>
+        </ng-template>
+        <ng-template pTemplate="body" let-degre>
+            <tr>
+                <td>
+                    <p-tableCheckbox [value]="degre"></p-tableCheckbox>
+                </td>
+                 <td>{{degre.Code}}</td>
+                <td>{{degre.Designation}}</td>
+                <td>{{degre.OrderDegres}}</td>
+               
+                
+              
+                <td>
+                    <button pButton pRipple icon="pi pi-pencil" class="p-button-rounded p-button-success p-mr-2" (click)="editDegre(degre)"></button>
+                    <button pButton pRipple icon="pi pi-trash" class="p-button-rounded p-button-warning" (click)="onDelete(degre)"></button>
+                </td>
+            </tr>
+        </ng-template>
+        <ng-template pTemplate="summary">
+            <div class="p-d-flex p-ai-center p-jc-between">
+                In total there are {{degres ? degres.length : 0 }} degres.
+            </div>
+        </ng-template>
+    </p-table>
+</div>
+
+<p-dialog [(visible)]="degreDialog" [style]="{width: '450px'}" header="Degre Details" [modal]="true" styleClass="p-fluid">
+    <ng-template pTemplate="content" *ngIf="degreFormGroupe">
+        
+       <form [formGroup]="degreFormGroupe">
+        <div class="form-group" > 
+              <div class="form-group">
+            <label >Code</label>
+            <input name="Code" pInputTextarea  rows="3" formControlName="Code" cols="20"/>
+        </div>
+    </div>
+        <div class="form-group" > 
+            <label>Designation</label>
+            <input type="text" name="Designation" pInputText formControlName="Designation" />
+        </div>
+        <div class="form-group" > 
+            <label>Order Degres</label>
+            <input type="text" name="OrderDegres" pInputText formControlName="OrderDegres" />
+        </div>
+       
+        
+        
+        
+     
+      
+
+    </form>
+
+      
+    </ng-template>
+    
+    <ng-template pTemplate="footer">
+        <button pButton pRipple label="Cancel" icon="pi pi-times" class="p-button-text" (click)="hideDialog()"></button>
+        <button pButton pRipple label="Save" icon="pi pi-check" class="p-button-text" (click)="saveDegre()"></button>
+    </ng-template>
+</p-dialog>
+
+<p-confirmDialog [style]="{width: '450px'}"></p-confirmDialog>

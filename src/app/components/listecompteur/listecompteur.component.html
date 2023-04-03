@@ -1,0 +1,50 @@
+<p-toast></p-toast>
+<div class="card">
+    <p-toolbar styleClass="p-mb-4">
+        <ng-template pTemplate="left">
+          <p-multiSelect [options]="cols" [(ngModel)]="selectedPrevenitiveparcompteurs" defaultLabel="Select a Prevenitive Par Compteur" optionLabel="field"
+            display="chip"></p-multiSelect>
+       
+        </ng-template>
+
+       
+    </p-toolbar>
+
+    <p-table #dt [value]="prevenitiveparcompteurs" [rows]="10" [paginator]="true" 
+    [columns]="selectedPrevenitiveparcompteurs"
+        
+    [(selection)]="selectedPrevenitiveparcompteurs" [rowHover]="true" dataKey="id"
+        currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries" [showCurrentPageReport]="true">
+     
+        <ng-template pTemplate="header" let-columns>
+            <tr>
+                <th *ngFor="let col of columns">
+                    {{col.header}}
+                </th>
+                <th *ngIf="selectedPrevenitiveparcompteurs.length>0">Action</th>
+            </tr>
+        </ng-template>
+            <ng-template pTemplate="body" let-prevenitiveparcompteur let-columns="columns">
+                <tr>
+                    
+                        <td *ngFor="let col of columns">
+                            {{prevenitiveparcompteur[col.field]}}
+                            
+                        </td>
+                    
+                    <td *ngIf="selectedPrevenitiveparcompteurs.length>0">
+                        
+                    <button pButton pRipple icon="pi pi-pencil" class="p-button-rounded p-button-success p-mr-2" (click)="editPrevenitiveParCompteur(prevenitiveparcompteur)"></button>
+                    <button pButton pRipple icon="pi pi-trash" class="p-button-rounded p-button-warning" (click)="onDelete(prevenitiveparcompteur)"></button>
+                </td>
+            </tr>
+        </ng-template>
+    
+        
+    </p-table>
+</div>
+
+
+
+
+<p-confirmDialog [style]="{width: '450px'}"></p-confirmDialog>

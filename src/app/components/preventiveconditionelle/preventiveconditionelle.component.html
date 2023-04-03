@@ -1,0 +1,172 @@
+<div class="grid">
+    <div class="col-14">
+        <div class="card">     
+<p-toast></p-toast>
+
+
+    <p-toolbar styleClass="p-mb-4">
+        <ng-template pTemplate="left">
+            <button pButton pRipple label="New" icon="pi pi-plus" class="p-button-success p-mr-2" (click)="openNew()"></button>
+            <button pButton pRipple  icon="pi pi-trash" class="p-button-danger" (click)="deletePreventiveConditionelle()" [disabled]="!selectedPreventiveconditionelles || !selectedPreventiveconditionelles.length"></button>
+        </ng-template>
+
+        <ng-template pTemplate="right">
+            <p-fileUpload mode="basic" accept="image/*" [maxFileSize]="1000000" label="Import" chooseLabel="Import" class="p-mr-2 p-d-inline-block"></p-fileUpload>
+            <button pButton pRipple label="Export" icon="pi pi-upload" class="p-button-help"></button>
+        </ng-template>
+    </p-toolbar>
+
+    <p-table #dt [value]="preventiveconditionelles" [rows]="10" [paginator]="true" [globalFilterFields]="[ 'id_equip','id_type','Code_Unite','Valeur_Min','Valeur_Max','Periodicite','Frequence','Frequence_Heure','Jour','date_action','Date_der_Releve','Date_Fin','Observation']"
+        [(selection)]="selectedPreventiveconditionelles" [rowHover]="true" dataKey="id"
+        currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries" [showCurrentPageReport]="true">
+       
+        <ng-template pTemplate="header">
+            <tr>
+                <th style="width: 6rem">
+                    <p-tableHeaderCheckbox></p-tableHeaderCheckbox>
+                </th>
+                
+                <th pSortableColumn="id_equip">equipement<p-sortIcon field="id_equip"></p-sortIcon></th>
+                <th pSortableColumn="id_Type">Type prev <p-sortIcon field="id_Type"></p-sortIcon></th>
+               
+                <th pSortableColumn="Code_Unite">Code_Unite <p-sortIcon field="Code_Unite"></p-sortIcon></th>
+
+                <th pSortableColumn="Valeur_Min">Valeur_Min<p-sortIcon field="Valeur_Min"></p-sortIcon></th>
+                <th pSortableColumn="Valeur_Max">Valeur_Max <p-sortIcon field="Valeur_Max"></p-sortIcon></th>
+               
+                <th pSortableColumn="Periodicite">Periodicite <p-sortIcon field="Periodicite"></p-sortIcon></th>
+               
+                
+               <th pSortableColumn="Frequence">Frequence <p-sortIcon field="Frequence"></p-sortIcon></th>
+
+               <th pSortableColumn="Observation">Observation <p-sortIcon field="Observation"></p-sortIcon></th>
+            
+            </tr>
+        </ng-template>
+        <ng-template pTemplate="body" let-preventiveconditionelle>
+            <tr _ngcontent-wnk-c202="" class="ng-star-inserted">
+                <td _ngcontent-wnk-c202="">
+                    <p-tableCheckbox [value]="preventiveconditionelle"></p-tableCheckbox>
+                </td> 
+                <td _ngcontent-wnk-c202="">{{preventiveconditionelle.Designationequip}}</td>
+                <td _ngcontent-wnk-c202="">{{preventiveconditionelle.Designationtype}}</td>
+                <td _ngcontent-wnk-c202="">{{preventiveconditionelle.Code_Unite}}</td>
+                <td _ngcontent-wnk-c202="">{{preventiveconditionelle.Valeur_Min}}</td>
+                <td _ngcontent-wnk-c202="">{{preventiveconditionelle.Valeur_Max}}</td>
+               
+                <td _ngcontent-wnk-c202="">{{preventiveconditionelle.Periodicite}}</td> 
+                <td _ngcontent-wnk-c202="">{{preventiveconditionelle.Frequence}}</td>
+                <td _ngcontent-wnk-c202="">{{preventiveconditionelle.Frequence_Heure}}</td>
+                <td _ngcontent-wnk-c202="">{{preventiveconditionelle.Jour}}</td>
+                <td _ngcontent-wnk-c202="">{{preventiveconditionelle.Date_Action}}</td>
+                <td _ngcontent-wnk-c202="">{{preventiveconditionelle.Date_der_Releve}}</td>
+                <td _ngcontent-wnk-c202="">{{preventiveconditionelle.Date_der_Releve}}</td>
+                 <td _ngcontent-wnk-c202="">{{preventiveconditionelle.Observation}}</td>
+                
+                <td >
+                    <button pButton pRipple icon="pi pi-pencil" class="p-button-rounded p-button-success p-mr-2" (click)="updatePreventiveConditionelle(preventiveconditionelle)"></button>
+                    <button pButton pRipple icon="pi pi-trash" class="p-button-rounded p-button-warning" (click)="onDelete(preventiveconditionelle)"></button>
+                </td>
+            </tr>
+        </ng-template>
+        <ng-template pTemplate="summary">
+            <div class="p-d-flex p-ai-center p-jc-between">
+                In total there are {{preventiveconditionelles ? preventiveconditionelles.length : 0 }} preventiveconditionelles.
+            </div>
+        </ng-template>
+    </p-table>
+</div>
+
+<p-dialog [(visible)]="preventiveconditionelleDialog" [style]="{width: '450px'}" header="Preventive conditionelles Details" [modal]="true" styleClass="p-fluid">
+    <ng-template pTemplate="content" *ngIf="preventiveconditionelleFormGroupe">
+          
+       <form [formGroup]="preventiveconditionelleFormGroupe">
+        <div class="form-group">
+            <label class="col-sm-4 col-form-label">Equipement</label>
+             <div class="form-group row">
+                 <div style="width:14%; min-width:10rem;">
+                     <select id="id_equip"  class="form-control" formControlName="id_equip">
+                         <option *ngFor="let s of equipements" value="{{s.id}}">{{s.Designation}}</option>
+                     </select>
+                 </div>
+             </div>
+            </div>
+            <div class="form-group" >
+                <label class="col-sm-4 col-form-label">typepreventive</label>
+                    <div class="form-group row">
+                        <div class="col-sm-12">
+                            <select id="id_Type"   class="form-control" formControlName="id_Type">
+                                <option *ngFor="let t of typeprevs" value="{{t.id}}">{{t.Designation}}</option>
+                             
+                            </select>
+                        </div>
+                    </div>
+                </div> 
+        <div class="form-group">
+            <label for="Code_Unite">Code_Unite</label>
+            <input type="text" id="Code_Unite" pInputText name="Code_Unite"  formControlName="Code_Unite"  />
+           
+        </div>
+        <div class="form-group">
+            <label for="Valeur_Min">Valeur_Min</label>
+            <input type="text" id="Valeur_Min" pInputText name="Valeur_Min"  formControlName="Valeur_Min"  />
+            
+        </div>
+        <div class="form-group">
+            <label for="Valeur_Max">Valeur_Max</label>
+            <input type="text" id="Valeur_Max" pInputText name="Valeur_Max"  formControlName="Valeur_Max"  />
+           
+        </div>
+        <div class="form-group">
+            <label for="Periodicite">Periodicite</label>
+            <input type="text" id="Periodicite" pInputText name="Periodicite"  formControlName="Periodicite"  />
+           
+        </div>
+        <div class="form-group">
+            <label for="Frequence">Frequence</label>
+            <input type="text" id="Frequence" pInputText name="Frequence"  formControlName="Frequence"  />
+           
+        </div>
+        <div class="form-group">
+            <label for="Frequence_Heure">Frequence_Heure</label>
+            <input type="text" id="Frequence_Heure" pInputText name="Frequence_Heure"  formControlName="Frequence_Heure"  />
+           
+        </div>
+        <div class="form-group">
+            <label for="Jour">Jour</label>
+            <input type="text" id="Jour" pInputText name="Jour"  formControlName="Jour"  />
+           
+        </div>
+        <div class="form-group">
+            <label for="Date_Action">Date_Action</label>
+            <input type="datetime-local" id="Date_Action" pInputText name="Date_Action"  formControlName="Date_Action"  />
+           
+        </div>
+        <div class="form-group">
+            <label for="Date_der_Releve">Date_der_Releve</label>
+            <input type="datetime-local" id="Date_der_Releve" pInputText name="Date_der_Releve"  formControlName="Date_der_Releve"  />
+           
+        </div>
+        <div class="form-group">
+            <label for="Date_Fin">Date_Fin</label>
+            <input type="datetime-local" id="Date_Fin" pInputText name="Date_Fin"  formControlName="Date_Fin"  />
+           
+        </div>
+        <div class="form-group">
+            <label for="Observation">Observation</label>
+            <input type="text" id="Observation" pInputText name="Observation"  formControlName="Observation"  />
+            
+        </div>
+ 
+       </form>
+    </ng-template>
+    
+    <ng-template pTemplate="footer">
+        <button pButton pRipple label="Cancel" icon="pi pi-times" class="p-button-text" (click)="hideDialog()"></button>
+        <button pButton pRipple label="Save" icon="pi pi-check" class="p-button-text" (click)="savepreventiveconditionelle()"></button>
+    </ng-template>
+</p-dialog>
+
+<p-confirmDialog [style]="{width: '450px'}"></p-confirmDialog>
+    </div>
+</div>

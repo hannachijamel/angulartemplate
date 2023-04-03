@@ -1,0 +1,121 @@
+
+<div  *ngIf="preventiveconditionelleFormGroupe">                         
+                          <form class="form-card" [formGroup]="preventiveconditionelleFormGroupe"  >
+                              <div class="row  text-left" >
+                              
+                                     <div class="form-group col-sm-2 flex-column d-flex">
+                                        <label class="form-control-label px-4">Type Prelevement <span class="text-danger"> *</span></label>
+                                         
+                                             <div class="col-sm-12" >
+                                                 <select  style="height:45px" id="id_Type"  class="form-control" formControlName="id_Type">
+                                                     <option *ngFor="let s of typeprevs" value="{{s.id}}">{{s.Designation}}</option>
+                                                 </select>
+                                             </div>
+                                         </div>
+                                  <div class="form-group col-sm-2 flex-column d-flex">
+                                     <label class="form-control-label px-3">Unite<span class="text-danger"> *</span>
+                                    </label> 
+                                    <input type="text" id="Code_Unite" name="Code_Unite" placeholder="Enter your last name" onblur="validate(2)" formControlName="Code_Unite"> </div>
+                                     <div class="form-group col-sm-2 flex-column d-flex">
+                                      <label class="form-control-label px-3">Frequence <span class="text-danger"> *</span></label>
+                                       <input type="text" id="Frequence" formControlName="Frequence" name="Frequence" placeholder="" onblur="validate(3)"> 
+                                    </div>
+                              </div>
+                                  
+                                  
+                                   
+                                    <!-- <div class="row   justify-content-between text-left">
+                                        
+                                        
+                                            <label class="form-control-label px-3">Periodicite</label>
+                                            <table border="1" width=20% style="height: 1rem; background-color: #fff; "  >
+                                                <td>
+                                        <div class="form-group col-sm-12 flex-column d-flex">
+                                         
+                                         <div class="row justify-content-between">
+                                            <div>
+                                                <input type="radio" id="huey" name="drone" value="huey"
+                                                       checked>
+                                                <label for="huey">Huey</label>
+                                              </div>
+                                          
+                                              <div>
+                                                <input type="radio" id="dewey" name="drone" value="dewey">
+                                                <label for="dewey">Dewey</label>
+                                              </div>
+                                          
+                                              <div>
+                                                <input type="radio" id="louie" name="drone" value="louie">
+                                                <label for="louie">Louie</label>
+                                              </div>
+                                              
+                                            </div>
+                                             
+
+                                           
+                                            </div>
+                                        </td>
+                                        </table>
+                                        <div class="form-group col-sm-3 flex-column d-flex"> 
+                                            <label class="form-control-label px-3">First name
+                                              <span class="text-danger"> *</span></label>
+                                               <input type="text" name="fname"  >
+                                               </div>
+                                    
+                                         <div class="form-group col-sm-3 flex-column d-flex"> 
+                                           <label class="form-control-label px-3">Phone number
+                                             <span class="text-danger"> *</span></label> 
+                                             <input type="text" id="mob" name="mob" placeholder=""
+                                              onblur="validate(4)"> </div>
+                                    
+                                          </div> -->
+                             
+                                <div class="row    text-left">
+                                  <div class="form-group col-sm-2 flex-column d-flex">
+                                    <label class="form-control-label px-3" for="Date_Fin">Date Fin<span class="text-danger"> *</span></label>
+                                    <input type="datetime-local" id="Date_Fin" pInputText name="Date_Fin"  formControlName="Date_Fin"  />
+                                   
+                                </div>
+                          
+                                    <div class="form-group col-sm-2 flex-column d-flex"> 
+                                      <label class="form-control-label px-3">Periodicite
+                                        <span class="text-danger"> *</span></label>
+                                         <input type="text" name="Periodicite" id="Periodicite" formControlName="Periodicite">
+                                         </div>
+                                    <div class="form-group col-sm-2 flex-column d-flex">
+                                       <label class="form-control-label px-3">nbre par(jour)<span class="text-danger"> *</span></label> 
+                                       <input type="text" id="Jour" formControlName="Jour" name="Jour" placeholder="Enter your last name" onblur="validate(2)"> 
+                                    </div>
+                                    <div class="form-group col-sm-2 flex-column d-flex">
+                                        <label class="form-control-label px-1" for="Date_der_Releve">Date Dernier Prelevement<span class="text-danger"> *</span></label>
+                                        <input type="datetime-local" id="Date_der_Releve" pInputText name="Date_der_Releve"  formControlName="Date_der_Releve"  />
+                                       
+                                    </div>
+                                  </div>
+                                    <div class="row    text-left">
+                                    <div class="form-group col-sm-2 flex-column d-flex">
+                                        <label class="form-control-label px-3">Valeur Min<span class="text-danger"> *</span></label> 
+                                        <input type="text" id="Valeur_Min" formControlName="Valeur_Min" name="Valeur_Min" placeholder="Enter your last name" onblur="validate(2)"> 
+                                     </div>
+                                     <div class="form-group col-sm-2 flex-column d-flex">
+                                        <label class="form-control-label px-3">Valeur Max<span class="text-danger"> *</span></label> 
+                                        <input type="text" id="Valeur_Max" formControlName="Valeur_Max" name="Valeur_Max" placeholder="Enter your last name" onblur="validate(2)"> 
+                                     </div>
+
+                                   
+                                      <div class="form-group col-sm-2 flex-column d-flex">
+                                        <div class="form-group "> 
+                                          <label class="form-control-label px-3"> <span class="text-danger"> </span></label> 
+                                      
+                                            <button type="submit" class="btn-block btn-primary" (click)="onSavePrevConditionnel() ">Save</button> </div>
+                                    </div>
+                                
+                                      </div>
+                           
+                              
+                          </form>
+                      
+               
+          
+            </div>
+

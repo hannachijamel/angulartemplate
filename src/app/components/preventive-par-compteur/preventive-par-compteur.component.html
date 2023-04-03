@@ -1,0 +1,197 @@
+<p-toast></p-toast>
+<div class="card">
+    <p-toolbar styleClass="p-mb-4">
+        <ng-template pTemplate="left">
+            <button pButton pRipple label="New" icon="pi pi-plus" class="p-button-success p-mr-2" (click)="openNew()"></button>
+            <button pButton pRipple  icon="pi pi-trash" class="p-button-danger" (click)="deleteSelectedPrevenitiveParCompteur()" [disabled]="!selectedPrevenitiveparcompteurs || !selectedPrevenitiveparcompteurs.length"></button>
+            <p-multiSelect [options]="cols" [(ngModel)]="selectedPrevenitiveparcompteurs" defaultLabel="Select a Prevenitive Par Compteur" optionLabel="field"
+            display="chip"></p-multiSelect>
+       
+        </ng-template>
+
+        <ng-template pTemplate="right">
+            <p-fileUpload mode="basic" accept="image/*" [maxFileSize]="1000000" label="Import" chooseLabel="Import" class="p-mr-2 p-d-inline-block"></p-fileUpload>
+            <button pButton pRipple label="Export" icon="pi pi-upload" class="p-button-help"></button>
+        </ng-template>
+    </p-toolbar>
+
+    <p-table #dt [value]="prevenitiveparcompteurs" [rows]="10" [paginator]="true" 
+    [columns]="selectedPrevenitiveparcompteurs"
+        
+    [(selection)]="selectedPrevenitiveparcompteurs" [rowHover]="true" dataKey="id"
+        currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries" [showCurrentPageReport]="true">
+     
+        <ng-template pTemplate="header" let-columns>
+            <tr>
+                <th *ngFor="let col of columns">
+                    {{col.header}}
+                </th>
+                <th *ngIf="selectedPrevenitiveparcompteurs.length>0">Action</th>
+            </tr>
+        </ng-template>
+            <ng-template pTemplate="body" let-prevenitiveparcompteur let-columns="columns">
+                <tr>
+                    
+                        <td *ngFor="let col of columns">
+                            {{prevenitiveparcompteur[col.field]}}
+                            
+                        </td>
+                    
+                    <td *ngIf="selectedPrevenitiveparcompteurs.length>0">
+                        
+                    <button pButton pRipple icon="pi pi-pencil" class="p-button-rounded p-button-success p-mr-2" (click)="editPrevenitiveParCompteur(prevenitiveparcompteur)"></button>
+                    <button pButton pRipple icon="pi pi-trash" class="p-button-rounded p-button-warning" (click)="onDelete(prevenitiveparcompteur)"></button>
+                </td>
+            </tr>
+        </ng-template>
+    
+        <ng-template pTemplate="summary">
+            <div class="p-d-flex p-ai-center p-jc-between">
+                In total there are {{prevenitiveparcompteurs ? prevenitiveparcompteurs.length : 0 }} prevenitiveperiodiques.
+            </div>
+        </ng-template>
+    </p-table>
+</div>
+
+
+<p-dialog [(visible)]="prevenitiveparcompteurDialog" [style]="{width: '450px'}" header="prevenitiveperiodique Details" [modal]="true" styleClass="p-fluid">
+    <ng-template pTemplate="content" *ngIf="prevenitiveparcompteurFormGroupe">        
+       <form [formGroup]="prevenitiveparcompteurFormGroupe">
+        <div class="form-group">
+            <label class="col-sm-4 col-form-label">Equipement</label>
+             <div class="form-group row">
+                 <div class="col-sm-12">
+                     <select id="id_Equip"  class="form-control" formControlName="id_Equip">
+                         <option *ngFor="let s of equipements" value="{{s.id}}">{{s.Designation}}</option>
+                     </select>
+                 </div>
+             </div>
+            </div>
+             <div class="form-group" >
+                <label class="col-sm-4 col-form-label">typepreventive</label>
+                    <div class="form-group row">
+                        <div class="col-sm-12">
+                            <select id="id_Type"   class="form-control" formControlName="id_Type">
+                                <option *ngFor="let t of typepreventives" value="{{t.id}}">{{t.Designation}}</option>
+                             
+                            </select>
+                        </div>
+                    </div>
+                </div> 
+           
+
+        <div class="form-group">
+            <label for="Code_Unite">Code_Unite</label>
+            <input type="text" id="Code_Unite"  pInputText name="Code_Unite"  formControlName="Code_Unite"  />
+           
+        </div>  
+        <div class="form-group">
+            <label for="Val_Actuelle">Val_Actuelle</label>
+            <input type="text" id="Val_Actuelle"  pInputText name="Val_Actuelle"  formControlName="Val_Actuelle"  />
+           
+        </div>  
+        <div class="form-group">
+            <label for="Val_Alerte">Val_Alerte</label>
+            <input type="text" id="Val_Alerte"  pInputText name="Val_Alerte"  formControlName="Val_Alerte"  />
+           
+        </div>  
+       
+        <div class="form-group">
+            <label for="Periodicite">Periodicite</label>
+            <input type="text" id="Periodicite"  pInputText name="Periodicite"  formControlName="Periodicite"  />
+            
+        </div>
+        <div class="form-group">
+            <label for="Frequence">Frequence</label>
+            <input type="text" id="Frequence"  pInputText name="Frequence"  formControlName="Frequence"  />
+           
+        </div>
+        <div class="form-group">
+            <label for="Frequence_Heure">Frequence_Heure</label>
+            <input type="text" id="Frequence_Heure" pInputText name="Frequence_Heure"  formControlName="Frequence_Heure"  />
+           
+        </div>
+        <div class="form-group">
+            <label for="Jour">Jour</label>
+            <input type="text" id="Jour"  pInputText name="Jour"  formControlName="Jour"  />
+           
+        </div>
+        <div class="form-group">
+         <label for="Date_Action">Date_Action</label>
+         <input type="text" id="Date_Action"  pInputText name="Date_Action"  formControlName="Date_Action"  />
+          
+        </div> 
+        <div class="form-group">
+        
+            <label for="Date_Der_Releve">Date_Der_Releve</label>
+            <input type="text" id="Date_Der_Releve"   pInputText name="Date_Der_Releve"  formControlName="Date_Der_Releve"  />
+      
+        </div>
+     <div class="form-group">
+        
+            <label for="Date_Fin">Date_Fin</label>
+            <input type="text" id="Date_Fin"   pInputText name="Date_Fin"  formControlName="Date_Fin"  />
+      
+        </div>
+     <div class="form-group">
+         
+            <label for="Val_Reguilier">Val_Reguilier</label>
+            <input type="text" id="Val_Reguilier"   pInputText name="Val_Reguilier"  formControlName="Val_Reguilier"  />
+        
+        </div>
+     <div class="form-group">
+       
+            <label for="Code_Maint">Code_Maint</label>
+            <input type="text" id="Code_Maint"  pInputText name="Code_Maint"  formControlName="Code_Maint"  />
+       
+        </div>
+        <div class="form-group">
+       
+            <label for="Arret">Arret</label>
+            <input type="text" id="Arret"  pInputText name="Arret"  formControlName="Arret"  />
+       
+        </div>
+     <div class="form-group">
+         <label for="Code_Etat_Maint">Code_Etat_Maint</label>
+         <input type="text" id="Code_Etat_Maint"   pInputText name="Code_Etat_Maint"  formControlName="Code_Etat_Maint"  />
+       
+        </div>
+    
+     <div class="form-group">
+         <label for="Num_Alerte">Num_Alerte</label>
+         <input type="text" id="Num_Alerte"  pInputText name="Num_Alerte"  formControlName="Num_Alerte"  />
+       
+        </div>
+     <div class="form-group">
+        
+            <label for="Date_Der_Maint">Date_Der_Maint</label>
+            <input type="text" id="Date_Der_Maint"   pInputText name="Date_Der_Maint"  formControlName="Date_Der_Maint"  />
+        
+         </div> 
+  
+    <div class="form-group">
+        <label for="Observation">Observation</label>
+        <input type="text" id="Observation"   pInputText name="Observation"  formControlName="Observation"  />
+       
+    </div>
+    <div class="form-group">
+        <label for="J_ddm">J_ddm</label>
+        <input type="text" id="J_ddm"   pInputText name="J_ddm"  formControlName="J_ddm"  />
+       
+    </div>
+    
+       
+      
+    </form>
+ </ng-template>
+    
+    <ng-template pTemplate="footer">
+        <button pButton pRipple label="Cancel" icon="pi pi-times" class="p-button-text" (click)="hideDialog()"></button>
+        <button pButton pRipple label="Save" icon="pi pi-check" class="p-button-text" (click)="savePreventiveParCompteur()"></button>
+    </ng-template>
+</p-dialog>
+
+<p-confirmDialog [style]="{width: '450px'}"></p-confirmDialog>
+
+
+

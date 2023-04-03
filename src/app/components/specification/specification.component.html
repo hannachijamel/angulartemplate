@@ -1,0 +1,86 @@
+<p-toast></p-toast>
+
+<div class="card">
+    <p-toolbar styleClass="p-mb-4">
+        <ng-template pTemplate="left">
+            <button pButton pRipple label="New" icon="pi pi-plus" class="p-button-success p-mr-2" (click)="openNew()"></button>
+            <button pButton pRipple  icon="pi pi-trash" class="p-button-danger" (click)="deleteSelectedSpecification()" [disabled]="!selectedSpecifications || !selectedSpecifications.length"></button>
+        </ng-template>
+
+        <ng-template pTemplate="right">
+            <p-fileUpload mode="basic" accept="image/*" [maxFileSize]="1000000" label="Import" chooseLabel="Import" class="p-mr-2 p-d-inline-block"></p-fileUpload>
+            <button pButton pRipple label="Export" icon="pi pi-upload" class="p-button-help"></button>
+        </ng-template>
+    </p-toolbar>
+
+    <p-table #dt [value]="specifications" [rows]="10" [paginator]="true" [globalFilterFields]="['Designation','Code_Spec']"
+        [(selection)]="selectedSpecifications" [rowHover]="true" dataKey="id"
+        currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries" [showCurrentPageReport]="true">
+     
+        <ng-template pTemplate="header">
+            <tr>
+                <th style="width: 3rem">
+                    <p-tableHeaderCheckbox></p-tableHeaderCheckbox>
+                </th> 
+                <th pSortableColumn="Code_Spec">Code_Spec <p-sortIcon field="Code_Spec"></p-sortIcon></th>
+                <th pSortableColumn="Designation">Designation <p-sortIcon field="Designation"></p-sortIcon></th>
+              
+                
+               
+                <th></th>
+            </tr>
+        </ng-template>
+        <ng-template pTemplate="body" let-specification>
+            <tr>
+                <td>
+                    <p-tableCheckbox [value]="specification"></p-tableCheckbox>
+                </td>
+                <td>{{specification.Code_Spec}}</td>
+                <td>{{specification.Designation}}</td>
+                
+                
+               
+                
+              
+                <td>
+                    <button pButton pRipple icon="pi pi-pencil" class="p-button-rounded p-button-success p-mr-2" (click)="editSpecification(specification)"></button>
+                    <button pButton pRipple icon="pi pi-trash" class="p-button-rounded p-button-warning" (click)="onDelete(specification)"></button>
+                </td>
+            </tr>
+        </ng-template>
+        <ng-template pTemplate="summary">
+            <div class="p-d-flex p-ai-center p-jc-between">
+                In total there are {{specifications ? specifications.length : 0 }} specifications.
+            </div>
+        </ng-template>
+    </p-table>
+</div>
+
+<p-dialog [(visible)]="specificationDialog" [style]="{width: '450px'}" header="Specification Details" [modal]="true" styleClass="p-fluid">
+    <ng-template pTemplate="content" *ngIf="specificationFormGroupe">
+        
+       <form [formGroup]="specificationFormGroupe">
+        <div class="form-group" > 
+              <div class="form-group">
+            <label >Code_Spec</label>
+            <input name="Code_Spec" pInputTextarea  rows="3" formControlName="Code_Spec" />
+        </div>
+            <label>Designation</label>
+            <input type="text" name="Designation" pInputText formControlName="Designation" />
+            
+        </div>
+     
+      
+
+    </form>
+
+      
+    </ng-template>
+    
+    <ng-template pTemplate="footer">
+        <button pButton pRipple label="Cancel" icon="pi pi-times" class="p-button-text" (click)="hideDialog()"></button>
+        <button pButton pRipple label="Save" icon="pi pi-check" class="p-button-text" (click)="saveSpecification()"></button>
+    </ng-template>
+</p-dialog>
+
+<p-confirmDialog [style]="{width: '450px'}"></p-confirmDialog>

@@ -1,0 +1,94 @@
+<p-toast></p-toast>
+
+<div class="card">
+    <p-toolbar styleClass="p-mb-4">
+        <ng-template pTemplate="left">
+            <button pButton pRipple label="New" icon="pi pi-plus" class="p-button-success p-mr-2" (click)="openNew()"></button>
+            <button pButton pRipple  icon="pi pi-trash" class="p-button-danger" (click)="deleteSelectedEtat()" [disabled]="!selectedEtats || !selectedEtats.length"></button>
+        </ng-template>
+
+        <ng-template pTemplate="right">
+            <p-fileUpload mode="basic" accept="image/*" [maxFileSize]="1000000" label="Import" chooseLabel="Import" class="p-mr-2 p-d-inline-block"></p-fileUpload>
+            <button pButton pRipple label="Export" icon="pi pi-upload" class="p-button-help"></button>
+        </ng-template>
+    </p-toolbar>
+
+    <p-table #dt [value]="etats" [rows]="10" [paginator]="true" [globalFilterFields]="['Libelle','GenererIntervention','j_ddm']"
+        [(selection)]="selectedEtats" [rowHover]="true" dataKey="id"
+        currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries" [showCurrentPageReport]="true">
+     
+        <ng-template pTemplate="header">
+            <tr>
+                <th style="width: 3rem">
+                    <p-tableHeaderCheckbox></p-tableHeaderCheckbox>
+                </th> 
+                 <th pSortableColumn="Libelle">Libelle <p-sortIcon field="Libelle"></p-sortIcon></th>
+                <th pSortableColumn="GenererIntervention">GenererIntervention <p-sortIcon field="GenererIntervention"></p-sortIcon></th>
+                <th pSortableColumn="J_ddm">j_ddm <p-sortIcon field="J_ddm"></p-sortIcon></th>
+               
+                <th></th>
+            </tr>
+        </ng-template>
+        <ng-template pTemplate="body" let-etat>
+            <tr>
+                <td>
+                    <p-tableCheckbox [value]="etat"></p-tableCheckbox>
+                </td>
+                 <td>{{etat.Libelle}}</td>
+                <td>{{etat.GenererIntervention}}</td>
+                <td>{{etat.j_ddm}}</td>
+               
+                
+              
+                <td>
+                    <button pButton pRipple icon="pi pi-pencil" class="p-button-rounded p-button-success p-mr-2" (click)="editEtat(etat)"></button>
+                    <button pButton pRipple icon="pi pi-trash" class="p-button-rounded p-button-warning" (click)="onDelete(etat)"></button>
+                </td>
+            </tr>
+        </ng-template>
+        <ng-template pTemplate="summary">
+            <div class="p-d-flex p-ai-center p-jc-between">
+                In total there are {{etats ? etats.length : 0 }} etats.
+            </div>
+        </ng-template>
+    </p-table>
+</div>
+
+<p-dialog [(visible)]="etatDialog" [style]="{width: '450px'}" header="Site Details" [modal]="true" styleClass="p-fluid">
+    <ng-template pTemplate="content" *ngIf="etatFormGroupe">
+        
+       <form [formGroup]="etatFormGroupe">
+        <div class="form-group" > 
+              <div class="form-group">
+            <label >Libelle</label>
+            <input name="Libelle" pInputTextarea  rows="3" formControlName="Libelle" cols="20"/>
+        </div>
+    </div>
+        <div class="form-group" > 
+            <label>GenererIntervention</label>
+            <input type="text" name="GenererIntervention" pInputText formControlName="GenererIntervention" />
+        </div>
+        <div class="form-group">
+            <div class="p-field p-col-12 p-md-6">
+                <label for="J_ddm">J_ddm</label>
+                <p-calendar formControlName="J_ddm" [showTime]="true" inputId="J_ddm"></p-calendar>
+            </div>
+        </div>
+        
+        
+        
+     
+      
+
+    </form>
+
+      
+    </ng-template>
+    
+    <ng-template pTemplate="footer">
+        <button pButton pRipple label="Cancel" icon="pi pi-times" class="p-button-text" (click)="hideDialog()"></button>
+        <button pButton pRipple label="Save" icon="pi pi-check" class="p-button-text" (click)="saveEtat()"></button>
+    </ng-template>
+</p-dialog>
+
+<p-confirmDialog [style]="{width: '450px'}"></p-confirmDialog>

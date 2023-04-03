@@ -1,0 +1,83 @@
+<p-toast></p-toast>
+
+<div class="card">
+    <p-toolbar styleClass="p-mb-4">
+        <ng-template pTemplate="left">
+            <button pButton pRipple label="New" icon="pi pi-plus" class="p-button-success p-mr-2" (click)="openNew()"></button>
+            <button pButton pRipple  icon="pi pi-trash" class="p-button-danger" (click)="deleteSelectedSite()" [disabled]="!selectedSites || !selectedSites.length"></button>
+        </ng-template>
+
+        <ng-template pTemplate="right">
+            <p-fileUpload mode="basic" accept="image/*" [maxFileSize]="1000000" label="Import" chooseLabel="Import" class="p-mr-2 p-d-inline-block"></p-fileUpload>
+            <button pButton pRipple label="Export" icon="pi pi-upload" class="p-button-help"></button>
+        </ng-template>
+    </p-toolbar>
+
+    <p-table #dt [value]="sites" [rows]="10" [paginator]="true" [globalFilterFields]="['Designation','Code']"
+        [(selection)]="selectedSites" [rowHover]="true" dataKey="id"
+        currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries" [showCurrentPageReport]="true">
+     
+        <ng-template pTemplate="header">
+            <tr>
+                <th style="width: 3rem">
+                    <p-tableHeaderCheckbox></p-tableHeaderCheckbox>
+                </th> 
+                 <th pSortableColumn="Code">Code <p-sortIcon field="Code"></p-sortIcon></th>
+                <th pSortableColumn="Designation">Designation <p-sortIcon field="Designation"></p-sortIcon></th>
+              
+               
+                <th></th>
+            </tr>
+        </ng-template>
+        <ng-template pTemplate="body" let-site>
+            <tr>
+                <td>
+                    <p-tableCheckbox [value]="site"></p-tableCheckbox>
+                </td>
+                 <td>{{site.Code}}</td>
+                <td>{{site.Designation}}</td>
+               
+                
+              
+                <td>
+                    <button pButton pRipple icon="pi pi-pencil" class="p-button-rounded p-button-success p-mr-2" (click)="editSite(site)"></button>
+                    <button pButton pRipple icon="pi pi-trash" class="p-button-rounded p-button-warning" (click)="onDelete(site)"></button>
+                </td>
+            </tr>
+        </ng-template>
+        <ng-template pTemplate="summary">
+            <div class="p-d-flex p-ai-center p-jc-between">
+                In total there are {{sites ? sites.length : 0 }} sites.
+            </div>
+        </ng-template>
+    </p-table>
+</div>
+
+<p-dialog [(visible)]="siteDialog" [style]="{width: '450px'}" header="Site Details" [modal]="true" styleClass="p-fluid">
+    <ng-template pTemplate="content" *ngIf="siteFormGroupe">
+        
+       <form [formGroup]="siteFormGroupe">
+        <div class="form-group" > 
+              <div class="form-group">
+            <label >Code</label>
+            <input name="Code" pInputTextarea  rows="3" formControlName="Code" cols="20"/>
+        </div>
+            <label>Designation</label>
+            <input type="text" name="Designation" pInputText formControlName="Designation" />
+            
+        </div>
+     
+      
+
+    </form>
+
+      
+    </ng-template>
+    
+    <ng-template pTemplate="footer">
+        <button pButton pRipple label="Cancel" icon="pi pi-times" class="p-button-text" (click)="hideDialog()"></button>
+        <button pButton pRipple label="Save" icon="pi pi-check" class="p-button-text" (click)="saveSite()"></button>
+    </ng-template>
+</p-dialog>
+
+<p-confirmDialog [style]="{width: '450px'}"></p-confirmDialog>

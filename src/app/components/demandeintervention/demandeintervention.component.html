@@ -1,0 +1,180 @@
+<p-toast></p-toast>
+
+<div class="card">
+    <p-toolbar styleClass="p-mb-4">
+        <ng-template pTemplate="left">
+            <button pButton pRipple label="New" icon="pi pi-plus" class="p-button-success p-mr-2" (click)="openNew()"></button>
+            <button pButton pRipple  icon="pi pi-trash" class="p-button-danger" (click)="deleteSelectedDemandeIntervention()" [disabled]="!selecteddemandeintervens || !selecteddemandeintervens.length"></button>
+            <p-multiSelect [options]="cols" [(ngModel)]="selecteddemandeintervens" defaultLabel="Select a Demande interventions" optionLabel="field"
+            display="chip"></p-multiSelect>
+          
+        </ng-template>
+
+        <ng-template pTemplate="right">
+            <p-fileUpload mode="basic" accept="image/*" [maxFileSize]="1000000" label="Import" chooseLabel="Import" class="p-mr-2 p-d-inline-block"></p-fileUpload>
+            <button pButton pRipple label="Export" icon="pi pi-upload" class="p-button-help"></button>
+        </ng-template>
+    </p-toolbar>
+
+    <p-table #dt [value]="demandeintervens" [rows]="10" [paginator]="true"
+    [columns]="selecteddemandeintervens"
+        [(selection)]="selecteddemandeintervens" [rowHover]="true" dataKey="id"
+        currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries" [showCurrentPageReport]="true">
+     
+        <ng-template pTemplate="header" let-columns>
+            <tr>
+                <th *ngFor="let col of columns">
+                    {{col.header}}
+                </th>
+                <th *ngIf="selecteddemandeintervens.length>0">Action</th>
+            </tr>
+        </ng-template>
+        <ng-template pTemplate="body" let-demandeinterven let-columns="columns">
+            <tr>
+                
+                    <td *ngFor="let col of columns">
+                        {{demandeinterven[col.field]}}
+                        
+                    </td>
+                
+              
+                <td *ngIf="selecteddemandeintervens.length>0">
+                    <button pButton pRipple icon="pi pi-pencil" class="p-button-rounded p-button-success p-mr-2" (click)="editDemandeIntervention(demandeinterven)"></button>
+                    <button pButton pRipple icon="pi pi-trash" class="p-button-rounded p-button-warning" (click)="onDelete(demandeinterven)"></button>
+                </td>
+            </tr>
+        </ng-template>
+        <ng-template pTemplate="summary">
+            <div class="p-d-flex p-ai-center p-jc-between">
+                In total there are {{demandeintervens ? demandeintervens.length : 0 }} demandeintervens.
+            </div>
+        </ng-template>
+    </p-table>
+</div>
+
+<p-dialog [(visible)]="demandeinterventionDialog" [style]="{width: '450px'}" header="demande intervention Details" [modal]="true" styleClass="p-fluid">
+    <ng-template pTemplate="content" *ngIf="demandeintervenFormGroupe">
+        
+       <form [formGroup]="demandeintervenFormGroupe">
+        <div class="form-group">
+            <div class="p-field p-col-12 p-md-6">
+                <label for="DateEntre">Date Entre</label>
+                <p-calendar formControlName="DateEntre" [showTime]="true" inputId="DateEntre"></p-calendar>
+            </div>
+        </div>
+        <div class="form-group" > 
+              <div class="form-group">
+            <label >Demandeur</label>
+            <input name="Demandeur" pInputTextarea  rows="3" formControlName="Demandeur" />
+        </div>
+    </div>
+    <div class="form-group" > 
+        <label>Code_Empalcement</label>
+        <input type="text" name="Code_Empalcement" pInputText formControlName="Code_Empalcement" />
+    </div>
+    
+     <div class="form-group">
+                <label class="col-sm-4 col-form-label">Equipement</label>
+                 <div class="form-group row">
+                     <div class="col-sm-12">
+                         <select id="id_equip"  class="form-control" formControlName="id_equip">
+                             <option *ngFor="let s of equipements" value="{{s.id}}">{{s.Designation}}</option>
+                         </select>
+                     </div>
+                 </div>
+                </div>
+    <div class="form-group">
+        <div class="p-field p-col-12 p-md-6">
+            <label for="DateIntervention">Date Intervention</label>
+            <p-calendar formControlName="DateIntervention" [showTime]="true" inputId="DateIntervention"></p-calendar>
+        </div>
+    </div>
+   
+      
+        <div class="form-group" > 
+            <label>MatImmo</label>
+            <input type="text" name="MatImmo" pInputText formControlName="MatImmo" />
+        </div>
+        
+        <div class="form-group" > 
+            <label>Num_Serie</label>
+            <input type="text" name="Num_Serie" pInputText formControlName="Num_Serie" />
+        </div>
+        <div class="form-group">
+            <label class="col-sm-4 col-form-label">Etat</label>
+             <div class="form-group row">
+                 <div class="col-sm-12">
+                     <select id="idEtat"  class="form-control" formControlName="idEtat">
+                         <option *ngFor="let s of Etats" value="{{s.Id}}">{{s.Libelle}}</option>
+                     </select>
+                 </div>
+             </div>
+            </div>
+       
+        <div class="form-group" > 
+            <label>Panne</label>
+            <input type="text" name="Panne" pInputText formControlName="Panne" />
+        </div>
+        
+        <div class="form-group">
+            <label class="col-sm-4 col-form-label">Degres</label>
+             <div class="form-group row">
+                 <div class="col-sm-12">
+                     <select id="idDegre"  class="form-control" formControlName="idDegre">
+                         <option *ngFor="let s of Degres" value="{{s.idDegre}}">{{s.Designation}}</option>
+                     </select>
+                 </div>
+             </div>
+            </div>
+        <div class="form-group" > 
+            <label>Observation</label>
+            <input type="text" name="Observation" pInputText formControlName="Observation" />
+        </div>
+        <div class="form-group" > 
+            <label>PieceJointe</label>
+            <input type="text" name="PieceJointe" pInputText formControlName="PieceJointe" />
+        </div>
+        
+       
+        <div class="form-group">
+            <label class="col-sm-4 col-form-label">Emplacement</label>
+             <div class="form-group row">
+                 <div class="col-sm-12">
+                     <select id="idEmpl"  class="form-control" formControlName="idEmpl">
+                         <option *ngFor="let s of emplacements" value="{{s.idEmpl}}">{{s.Designation}}</option>
+                     </select>
+                 </div>
+             </div>
+            </div>
+       
+        <div class="form-group">
+            <div class="p-field p-col-12 p-md-6">
+                <label for="J_ddm">J_ddm</label>
+                <p-calendar formControlName="J_ddm" [showTime]="true" inputId="J_ddm"></p-calendar>
+            </div>
+        </div>
+        <div class="form-group" > 
+            <label>Code</label>
+            <input type="text" name="Code" pInputText formControlName="Code" />
+        </div>
+   
+        <div class="form-group">
+            <div class="p-field p-col-12 p-md-6">
+                <label for="DateDemande">Date Demande</label>
+                <p-calendar formControlName="DateDemande" [showTime]="true" inputId="DateDemande"></p-calendar>
+            </div>
+        </div>
+
+
+    </form>
+
+      
+    </ng-template>
+    
+    <ng-template pTemplate="footer">
+        <button pButton pRipple label="Cancel" icon="pi pi-times" class="p-button-text" (click)="hideDialog()"></button>
+        <button pButton pRipple label="Save" icon="pi pi-check" class="p-button-text" (click)="SaveDemandeIntervention()"></button>
+    </ng-template>
+</p-dialog>
+
+<p-confirmDialog [style]="{width: '450px'}"></p-confirmDialog>

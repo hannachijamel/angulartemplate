@@ -1,0 +1,504 @@
+
+
+
+<p-toast></p-toast>
+
+<div class="card">
+    <p-toolbar styleClass="p-mb-4">
+        <ng-template pTemplate="left">
+            <button pButton pRipple label="New" icon="pi pi-plus" class="p-button-success p-mr-2" (click)="openNew()"></button>
+            <button pButton pRipple  icon="pi pi-trash" class="p-button-danger" (click)="deleteSelectedEquipement()" [disabled]="!selectedequipements || !selectedequipements.length"></button>
+            
+<p-multiSelect [options]="cols" [(ngModel)]="selectedequipements" defaultLabel="Select a Equipement" optionLabel="field"
+	display="chip"></p-multiSelect>
+        </ng-template>
+
+        <ng-template pTemplate="right">
+            <p-fileUpload mode="basic" accept="image/*" [maxFileSize]="1000000" label="Import" chooseLabel="Import" class="p-mr-2 p-d-inline-block"></p-fileUpload>
+            <button pButton pRipple label="Export" icon="pi pi-upload" class="p-button-help"></button>
+        </ng-template>
+    </p-toolbar>
+
+    <p-table #dt [value]="equipements" [rows]="10" [paginator]="true" [columns]="selectedequipements"
+        [(selection)]="selectedequipements" [rowHover]="true" dataKey="id"
+        currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries" [showCurrentPageReport]="true">
+     
+        <ng-template pTemplate="header" let-columns>
+            <tr>
+                <th *ngFor="let col of columns">
+                    {{col.header}}
+                </th>
+                <th *ngIf="selectedequipements.length>0">Action</th>
+            </tr>
+        </ng-template>
+        <ng-template pTemplate="body" let-equipement let-columns="columns">
+            <tr>
+                
+                    <td *ngFor="let col of columns">
+                        {{equipement[col.field]}}
+                        
+                    </td>
+                
+                  
+                <td *ngIf="selectedequipements.length>0">
+                    <button pButton pRipple icon="pi pi-pencil" class="p-button-rounded p-button-success p-mr-2" (click)="editEquipement(equipement)"></button>
+                    <button pButton pRipple icon="pi pi-trash" class="p-button-rounded p-button-warning" (click)="onDelete(equipement)"></button>
+                </td>
+            </tr>
+        </ng-template>
+        <ng-template pTemplate="summary">
+            <div class="p-d-flex p-ai-center p-jc-between">
+                In total there are {{equipements ? equipements.length : 0 }} equipements.
+            </div>
+        </ng-template>
+    </p-table>
+</div>
+
+<p-dialog [(visible)]="equipementDialog" [style]="{width: '1300px'}" header="Model Operation Details" [modal]="true" styleClass="p-fluid">
+    
+    <ng-template pTemplate="content" *ngIf="equipementFormGroupe">
+       
+        <div class="card" style="width: 90rem; height: 100rem;" >
+            <div class="form-row " >  
+            
+
+        
+        <div class="card" style="width: 25rem; height: 18rem;">
+            <div class="card-horizontal">
+       <form [formGroup]="equipementFormGroupe">
+      
+        <div class="form-row p-col-8"  >
+        <div class="form-group col-md-6" > 
+           
+          <label >Designation</label>
+          <input name="Designation" pInputTextarea  formControlName="Designation" />
+      </div>
+     
+        <div class="form-group col-md-6">
+      <label >Prix_Achat</label>
+      <input name="Prix_Achat" pInputTextarea   formControlName="Prix_Achat" />
+  </div>
+        </div>
+        <div class="form-row p-col-8" >
+        <div class="form-group col-md-6">
+            <div class="p-field p-col-12 p-md-6">
+                <label for="Date_Achat">Date_Achat</label>
+                <p-calendar formControlName="Date_Achat" [showTime]="true" inputId="Date_Achat"></p-calendar>
+            </div>
+        </div>
+       
+       
+        <div class="form-group col-md-6" > 
+              
+            <label >Code_Fam</label>
+            <input name="Code_Fam" pInputTextarea  rows="3" formControlName="Code_Fam" />
+        </div>
+        </div>
+        <div class="form-row p-col-8" >
+        <div class="form-group col-md-6" > 
+            <label>Marque</label>
+            <input type="text" name="Marque" pInputText formControlName="Marque" />
+        </div>
+        <div class="form-group col-md-6" > 
+            <label>Ref</label>
+            <input type="text" name="Ref" pInputText formControlName="Ref" />
+        </div>
+        </div>
+        <!-- <div class="form-group col-md-2" > 
+            <label>CodeOrgane</label>
+            <input type="text" name="CodeOrgane" pInputText formControlName="CodeOrgane" />
+        </div> -->
+        <!-- <div class="form-group col-md-2" > 
+            <label>Code_Frs_Achat</label>
+            <input type="text" name="Code_Frs_Achat" pInputText formControlName="Code_Frs_Achat" />
+        </div>
+        <div class="form-group col-md-2" > 
+            <label>Garantie</label>
+            <input type="text" name="Garantie" pInputText formControlName="Garantie" />
+        </div>
+        <div class="form-group col-md-2">
+            <div class="p-field p-col-12 p-md-6">
+                <label for="Date_Fin_Garantie">Date_Fin_Garantie</label>
+                <p-calendar formControlName="Date_Fin_Garantie" [showTime]="true" inputId="Date_Fin_Garantie"></p-calendar>
+            </div>
+        </div>
+        <div class="form-group col-md-2" > 
+            <label>Num_Garantie</label>
+            <input type="text" name="Num_Garantie" pInputText formControlName="Num_Garantie" />
+        </div>
+        <div class="form-group col-md-2" > 
+            <label>Code_Frs_Maint</label>
+            <input type="text" name="Code_Frs_Maint" pInputText formControlName="Code_Frs_Maint" />
+        </div>
+        <div class="form-group col-md-2" > 
+            <label>Num_Contrat</label>
+            <input type="text" name="Num_Contrat" pInputText formControlName="Num_Contrat" />
+        </div>
+        
+        <div class="form-group col-md-2">
+            <div class="p-field p-col-12 p-md-6">
+                <label for="Date_Fin_Contrat">Date_Fin_Contrat</label>
+                <p-calendar formControlName="Date_Fin_Contrat" [showTime]="true" inputId="Date_Fin_Contrat"></p-calendar>
+            </div>
+        </div> -->
+        <!-- <div class="form-group col-md-2" > 
+            <label>Num_Serie</label>
+            <input type="text" name="Num_Serie" pInputText formControlName="Num_Serie" />
+        </div>
+        <div class="form-group col-md-2" > 
+            <label>Actif</label>
+            <input type="text" name="Actif" pInputText formControlName="Actif" />
+        </div>
+        <div class="form-group col-md-2" > 
+            <label>User_Creat</label>
+            <input type="text" name="User_Creat" pInputText formControlName="User_Creat" />
+        </div>
+        <div class="form-group col-md-2">
+            <label class="col-sm-4 col-form-label">Emplacement</label>
+             <div class="form-group row">
+                 <div class="col-sm-12">
+                     <select id="Code_Emplacement"  class="form-control" formControlName="Code_Emplacement">
+                         <option *ngFor="let s of emplacements" value="{{s.id}}">{{s.Designation}}</option>
+                     </select>
+                 </div>
+             </div>
+             <div class="form-group">
+                <div class="p-field p-col-12 p-md-6">
+                    <label for="Date_Creat">Date_Creat</label>
+                    <p-calendar formControlName="Date_Creat" [showTime]="true" inputId="Date_Creat"></p-calendar>
+                </div>
+            </div>
+        </div>
+        <div class="form-group col-md-2" > 
+            <label>Observation</label>
+            <input type="text" name="Observation" pInputText formControlName="Observation" />
+        </div>
+        <div class="form-group col-md-2" > 
+            <label>Code_Statu</label>
+            <input type="text" name="Code_Statu" pInputText formControlName="Code_Statu" />
+        </div>
+        <div class="form-group col-md-2" > 
+            <label>Equp_Racine</label>
+            <input type="text" name="Equp_Racine" pInputText formControlName="Equp_Racine" />
+        </div>
+        <div class="form-group col-md-2" > 
+            <label>Code_Immo</label>
+            <input type="text" name="Code_Immo" pInputText formControlName="Code_Immo" />
+        </div>
+        <div class="form-group col-md-2">
+            <div class="p-field p-col-12 p-md-6">
+                <label for="Date_Reception">Date_Reception</label>
+                <p-calendar formControlName="Date_Reception" [showTime]="true" inputId="Date_Reception"></p-calendar>
+            </div>
+        </div>
+        <div class="form-group col-md-2">
+            <div class="p-field p-col-12 p-md-6">
+                <label for="Date_Fabriquation">Date_Fabriquation</label>
+                <p-calendar formControlName="Date_Fabriquation" [showTime]="true" inputId="Date_Fabriquation"></p-calendar>
+            </div>
+        </div>
+        <div class="form-group col-md-2" > 
+            <label>Image</label>
+            <input type="text" name="Image" pInputText formControlName="Image" />
+        </div>
+        <div class="form-group col-md-2">
+            <div class="p-field p-col-12 p-md-6">
+                <label for="Date_Mise_En_Service">Date_Mise_En_Service</label>
+                <p-calendar formControlName="Date_Mise_En_Service" [showTime]="true" inputId="Date_Mise_En_Service"></p-calendar>
+            </div>
+        </div>
+        <div class="form-group col-md-2" > 
+            <label>Nb_Heure_Prod</label>
+            <input type="text" name="Nb_Heure_Prod" pInputText formControlName="Nb_Heure_Prod" />
+        </div>
+        <div class="form-group col-md-2" > 
+            <label>Nb_Jour_Prod</label>
+            <input type="text" name="Nb_Jour_Prod" pInputText formControlName="Nb_Jour_Prod" />
+        </div>
+        <div class="form-group col-md-2" > 
+            <label>TypeCons</label>
+            <input type="text" name="TypeCons" pInputText formControlName="TypeCons" />
+        </div>
+        <div class="form-group col-md-2" > 
+            <label>Num_Contrat_Ass</label>
+            <input type="text" name="Num_Contrat_Ass" pInputText formControlName="Num_Contrat_Ass" />
+        </div>
+        <div class="form-group col-md-2">
+            <div class="p-field p-col-12 p-md-6">
+                <label for="Date_Fin_Ass">Date_Fin_Ass</label>
+                <p-calendar formControlName="Date_Fin_Ass" [showTime]="true" inputId="Date_Fin_Ass"></p-calendar>
+            </div>
+        </div>
+        <div class="form-group col-md-2" > 
+            <label>AvecPlaning</label>
+            <input type="text" name="AvecPlaning" pInputText formControlName="AvecPlaning" />
+        </div>
+        <div class="form-group col-md-2" > 
+            <label>TempsFonctionnement</label>
+            <input type="text" name="TempsFonctionnement" pInputText formControlName="TempsFonctionnement" />
+        </div>
+        <div class="form-group col-md-2">
+            <div class="p-field p-col-12 p-md-6">
+                <label for="J_ddm">J_ddm</label>
+                <p-calendar formControlName="J_ddm" [showTime]="true" inputId="J_ddm"></p-calendar>
+            </div>
+        </div>
+        <div class="form-group col-md-2" > 
+            <label>PrevConditionnel</label>
+            <input type="text" name="PrevConditionnel" pInputText formControlName="PrevConditionnel" />
+        </div>
+        <div class="form-group col-md-2" > 
+            <label>PrevPeriodique</label>
+            <input type="text" name="PrevPeriodique" pInputText formControlName="PrevPeriodique" />
+        </div>
+        <div class="form-group col-md-2" > 
+            <label>PrevCompteur</label>
+            <input type="text" name="PrevCompteur" pInputText formControlName="PrevCompteur" />
+        </div>
+        <div class="form-group col-md-2" > 
+            <label>Code_Equip</label>
+            <input type="text" name="Code_Equip" pInputText formControlName="Code_Equip" />
+        </div>
+        -->
+        
+        
+        
+     
+      
+
+    </form>
+</div>
+        </div>
+    
+
+            <div class="card" style="width: 50rem; height: 18rem;" >
+           <form [formGroup]="equipementFormGroupe">
+            <div class="form-row p-col-6" >
+            <div class="form-group col-md-3" > 
+               
+              <label >Designation</label>
+              <input name="Designation" pInputTextarea  formControlName="Designation" />
+          </div>
+         
+            <div class="form-group col-md-3">
+          <label >Prix_Achat</label>
+          <input name="Prix_Achat" pInputTextarea   formControlName="Prix_Achat" />
+          
+      </div>
+      <div class="form-group col-md-3" > 
+        <label>CodeOrgane</label>
+        <input type="text" name="CodeOrgane" pInputText formControlName="CodeOrgane" />
+    </div> 
+            </div>  
+            <div class="form-row p-col-6" >
+            <div class="form-group col-md-3">
+                <div class="p-field p-col-12 p-md-6">
+                    <label for="Date_Achat">Date_Achat</label>
+                    <p-calendar formControlName="Date_Achat" [showTime]="true" inputId="Date_Achat"></p-calendar>
+                </div>
+            </div>
+            
+           
+            <div class="form-group col-md-3" > 
+                  
+                <label >Code_Fam</label>
+                <input name="Code_Fam" pInputTextarea  rows="3" formControlName="Code_Fam" />
+            </div>
+            <div class="form-group col-md-3" > 
+                <label>Code_Frs_Achat</label>
+                <input type="text" name="Code_Frs_Achat" pInputText formControlName="Code_Frs_Achat" />
+            </div>
+        </div>
+        <div class="form-row p-col-6" >
+            <div class="form-group col-md-3" > 
+                <label>Marque</label>
+                <input type="text" name="Marque" pInputText formControlName="Marque" />
+            </div>
+            <div class="form-group col-md-3" > 
+                <label>Ref</label>
+                <input type="text" name="Ref" pInputText formControlName="Ref" />
+            </div>         
+     
+           
+            </div>
+           
+          
+            
+            <!--<div class="form-group col-md-2" > 
+                <label>Garantie</label>
+                <input type="text" name="Garantie" pInputText formControlName="Garantie" />
+            </div>
+            <div class="form-group col-md-2">
+                <div class="p-field p-col-12 p-md-6">
+                    <label for="Date_Fin_Garantie">Date_Fin_Garantie</label>
+                    <p-calendar formControlName="Date_Fin_Garantie" [showTime]="true" inputId="Date_Fin_Garantie"></p-calendar>
+                </div>
+            </div>
+            <div class="form-group col-md-2" > 
+                <label>Num_Garantie</label>
+                <input type="text" name="Num_Garantie" pInputText formControlName="Num_Garantie" />
+            </div>
+            <div class="form-group col-md-2" > 
+                <label>Code_Frs_Maint</label>
+                <input type="text" name="Code_Frs_Maint" pInputText formControlName="Code_Frs_Maint" />
+            </div>
+            <div class="form-group col-md-2" > 
+                <label>Num_Contrat</label>
+                <input type="text" name="Num_Contrat" pInputText formControlName="Num_Contrat" />
+            </div>
+            
+            <div class="form-group col-md-2">
+                <div class="p-field p-col-12 p-md-6">
+                    <label for="Date_Fin_Contrat">Date_Fin_Contrat</label>
+                    <p-calendar formControlName="Date_Fin_Contrat" [showTime]="true" inputId="Date_Fin_Contrat"></p-calendar>
+                </div>
+            </div> -->
+            <!-- <div class="form-group col-md-2" > 
+                <label>Num_Serie</label>
+                <input type="text" name="Num_Serie" pInputText formControlName="Num_Serie" />
+            </div>
+            <div class="form-group col-md-2" > 
+                <label>Actif</label>
+                <input type="text" name="Actif" pInputText formControlName="Actif" />
+            </div>
+            <div class="form-group col-md-2" > 
+                <label>User_Creat</label>
+                <input type="text" name="User_Creat" pInputText formControlName="User_Creat" />
+            </div>
+            <div class="form-group col-md-2">
+                <label class="col-sm-4 col-form-label">Emplacement</label>
+                 <div class="form-group row">
+                     <div class="col-sm-12">
+                         <select id="Code_Emplacement"  class="form-control" formControlName="Code_Emplacement">
+                             <option *ngFor="let s of emplacements" value="{{s.id}}">{{s.Designation}}</option>
+                         </select>
+                     </div>
+                 </div>
+                 <div class="form-group">
+                    <div class="p-field p-col-12 p-md-6">
+                        <label for="Date_Creat">Date_Creat</label>
+                        <p-calendar formControlName="Date_Creat" [showTime]="true" inputId="Date_Creat"></p-calendar>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group col-md-2" > 
+                <label>Observation</label>
+                <input type="text" name="Observation" pInputText formControlName="Observation" />
+            </div>
+            <div class="form-group col-md-2" > 
+                <label>Code_Statu</label>
+                <input type="text" name="Code_Statu" pInputText formControlName="Code_Statu" />
+            </div>
+            <div class="form-group col-md-2" > 
+                <label>Equp_Racine</label>
+                <input type="text" name="Equp_Racine" pInputText formControlName="Equp_Racine" />
+            </div>
+            <div class="form-group col-md-2" > 
+                <label>Code_Immo</label>
+                <input type="text" name="Code_Immo" pInputText formControlName="Code_Immo" />
+            </div>
+            <div class="form-group col-md-2">
+                <div class="p-field p-col-12 p-md-6">
+                    <label for="Date_Reception">Date_Reception</label>
+                    <p-calendar formControlName="Date_Reception" [showTime]="true" inputId="Date_Reception"></p-calendar>
+                </div>
+            </div>
+            <div class="form-group col-md-2">
+                <div class="p-field p-col-12 p-md-6">
+                    <label for="Date_Fabriquation">Date_Fabriquation</label>
+                    <p-calendar formControlName="Date_Fabriquation" [showTime]="true" inputId="Date_Fabriquation"></p-calendar>
+                </div>
+            </div>
+            <div class="form-group col-md-2" > 
+                <label>Image</label>
+                <input type="text" name="Image" pInputText formControlName="Image" />
+            </div>
+            <div class="form-group col-md-2">
+                <div class="p-field p-col-12 p-md-6">
+                    <label for="Date_Mise_En_Service">Date_Mise_En_Service</label>
+                    <p-calendar formControlName="Date_Mise_En_Service" [showTime]="true" inputId="Date_Mise_En_Service"></p-calendar>
+                </div>
+            </div>
+            <div class="form-group col-md-2" > 
+                <label>Nb_Heure_Prod</label>
+                <input type="text" name="Nb_Heure_Prod" pInputText formControlName="Nb_Heure_Prod" />
+            </div>
+            <div class="form-group col-md-2" > 
+                <label>Nb_Jour_Prod</label>
+                <input type="text" name="Nb_Jour_Prod" pInputText formControlName="Nb_Jour_Prod" />
+            </div>
+            <div class="form-group col-md-2" > 
+                <label>TypeCons</label>
+                <input type="text" name="TypeCons" pInputText formControlName="TypeCons" />
+            </div>
+            <div class="form-group col-md-2" > 
+                <label>Num_Contrat_Ass</label>
+                <input type="text" name="Num_Contrat_Ass" pInputText formControlName="Num_Contrat_Ass" />
+            </div>
+            <div class="form-group col-md-2">
+                <div class="p-field p-col-12 p-md-6">
+                    <label for="Date_Fin_Ass">Date_Fin_Ass</label>
+                    <p-calendar formControlName="Date_Fin_Ass" [showTime]="true" inputId="Date_Fin_Ass"></p-calendar>
+                </div>
+            </div>
+            <div class="form-group col-md-2" > 
+                <label>AvecPlaning</label>
+                <input type="text" name="AvecPlaning" pInputText formControlName="AvecPlaning" />
+            </div>
+            <div class="form-group col-md-2" > 
+                <label>TempsFonctionnement</label>
+                <input type="text" name="TempsFonctionnement" pInputText formControlName="TempsFonctionnement" />
+            </div>
+            <div class="form-group col-md-2">
+                <div class="p-field p-col-12 p-md-6">
+                    <label for="J_ddm">J_ddm</label>
+                    <p-calendar formControlName="J_ddm" [showTime]="true" inputId="J_ddm"></p-calendar>
+                </div>
+            </div>
+            <div class="form-group col-md-2" > 
+                <label>PrevConditionnel</label>
+                <input type="text" name="PrevConditionnel" pInputText formControlName="PrevConditionnel" />
+            </div>
+            <div class="form-group col-md-2" > 
+                <label>PrevPeriodique</label>
+                <input type="text" name="PrevPeriodique" pInputText formControlName="PrevPeriodique" />
+            </div>
+            <div class="form-group col-md-2" > 
+                <label>PrevCompteur</label>
+                <input type="text" name="PrevCompteur" pInputText formControlName="PrevCompteur" />
+            </div>
+            <div class="form-group col-md-2" > 
+                <label>Code_Equip</label>
+                <input type="text" name="Code_Equip" pInputText formControlName="Code_Equip" />
+            </div>
+            -->
+            
+           
+            
+         
+          
+    
+        </form>
+      
+
+            </div>
+         
+            </div>
+            
+        </div>
+    
+       
+        
+ 
+      
+    </ng-template>
+    
+    
+    
+    <ng-template pTemplate="footer">
+        <button pButton pRipple label="Cancel" icon="pi pi-times" class="p-button-text" (click)="hideDialog()"></button>
+        <button pButton pRipple label="Save" icon="pi pi-check" class="p-button-text" (click)="SaveEquipement()"></button>
+    </ng-template>
+</p-dialog>
+
+<p-confirmDialog [style]="{width: '450px'}"></p-confirmDialog>

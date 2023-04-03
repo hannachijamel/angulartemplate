@@ -1,0 +1,181 @@
+<p-toast></p-toast>
+<div class="card" >
+    <p-toolbar styleClass="p-mb-4">
+        <ng-template pTemplate="left">
+            <button  pButton pRipple label="New" icon="pi pi-plus" class="p-button-success p-mr-2" (click)="openNew()"></button>
+            <button pButton pRipple  icon="pi pi-trash" class="p-button-danger" (click)="deleteSelectedPrevenitivePeriodique()" [disabled]="!selectedPrevenitiveperiodiques || !selectedPrevenitiveperiodiques.length"></button>
+        
+                   
+<p-multiSelect [options]="cols" [(ngModel)]="selectedPrevenitiveperiodiques" 
+defaultLabel="Select a Prevenitive Periodique" optionLabel="field"
+display="chip"></p-multiSelect>
+        </ng-template>
+
+        <ng-template pTemplate="right">
+            <p-fileUpload mode="basic" accept="image/*" [maxFileSize]="1000000" label="Import" chooseLabel="Import" class="p-mr-2 p-d-inline-block"></p-fileUpload>
+            <button pButton pRipple label="Export" icon="pi pi-upload" class="p-button-help"></button>
+        </ng-template>
+    </p-toolbar>
+
+    <p-table #dt [value]="prevenitiveperiodiques" [rows]="10" [paginator]="true"
+     [columns]="selectedPrevenitiveperiodiques"
+        [(selection)]="selectedPrevenitiveperiodiques" [rowHover]="true" dataKey="id"
+        currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries" [showCurrentPageReport]="true">
+     
+        <ng-template pTemplate="header" let-columns>
+            <tr>
+                <th *ngFor="let col of columns">
+                    {{col.header}}
+                </th>
+                <th *ngIf="selectedPrevenitiveperiodiques.length>0">Action</th>
+            </tr>
+        </ng-template>
+        <ng-template pTemplate="body" let-prevenitiveperiodique let-columns="columns">
+            <tr>
+                
+                    <td *ngFor="let col of columns">
+                        {{prevenitiveperiodique[col.field]}}
+                        
+                    </td>
+                
+                <td *ngIf="selectedPrevenitiveperiodiques.length>0">
+                    <button pButton pRipple icon="pi pi-pencil" class="p-button-rounded p-button-success p-mr-2" (click)="editPrevenitiveperiodique(prevenitiveperiodique)"></button>
+                    <button pButton pRipple icon="pi pi-trash" class="p-button-rounded p-button-warning" (click)="onDelete(prevenitiveperiodique)"></button>
+                </td>
+            </tr>
+        </ng-template>
+        <ng-template pTemplate="summary">
+            <div class="p-d-flex p-ai-center p-jc-between">
+                In total there are {{prevenitiveperiodiques ? prevenitiveperiodiques.length : 0 }} prevenitiveperiodiques.
+            </div>
+        </ng-template>
+    </p-table>
+</div>
+
+<p-dialog [(visible)]="prevenitiveperiodiqueDialog" [style]="{width: '450px'}" header="prevenitiveperiodique Details" [modal]="true" styleClass="p-fluid">
+    <ng-template pTemplate="content" *ngIf="prevenitiveperiodiqueFormGroupe">        
+       <form [formGroup]="prevenitiveperiodiqueFormGroupe">
+        <div class="form-group">
+            <label class="col-sm-4 col-form-label">Equipement</label>
+             <div class="form-group row">
+                 <div class="col-sm-12">
+                     <select id="id_Equip"  class="form-control" formControlName="id_Equip">
+                         <option *ngFor="let s of equipements" value="{{s.id}}">{{s.Designation}}</option>
+                     </select>
+                 </div>
+             </div>
+            </div>
+             <div class="form-group" >
+                <label class="col-sm-12 col-form-label">typepreventive</label>
+                    <div class="form-group row">
+                        <div class="col-sm-12 p-md-6">
+                            <select id="id_Type"   class="form-control" formControlName="id_Type">
+                                <option *ngFor="let t of typepreventives" value="{{t.id}}">{{t.Designation}}</option>
+                             
+                            </select>
+                        </div>
+                    </div>
+                </div> 
+                  
+         <div class="form-group">
+            <label for="Periodicite">Periodicite</label>
+            <input type="text" id="Periodicite"  pInputText name="Periodicite"  formControlName="Periodicite"  />
+            
+        </div>
+        <div class="form-group">
+            <label for="Frequence">Frequence</label>
+            <input type="text" id="Frequence"  pInputText name="Frequence"  formControlName="Frequence"  />
+           
+        </div>
+        <div class="form-group">
+            <label for="Frequence_Heure">Frequence_Heure</label>
+            <input type="text" id="Frequence_Heure" pInputText name="Frequence_Heure"  formControlName="Frequence_Heure"  />
+           
+        </div>
+        <div class="form-group">
+            <label for="Jour">Jour</label>
+            <input type="text" id="Jour"  pInputText name="Jour"  formControlName="Jour"  />
+           
+        </div>
+        <div class="form-group">
+        <div class="p-field p-col-12 p-md-6">
+            <label for="Date_Action">Date_Action</label>
+            <p-calendar formControlName="Date_Action" [showTime]="true" inputId="Date_Action"></p-calendar>
+        </div>
+    </div>
+    <div class="form-group">
+        <div class="p-field p-col-12 p-md-6">
+            <label for="Date_Fin">Date_Fin</label>
+            <p-calendar formControlName="Date_Fin" [showTime]="true" inputId="Date_Fin"></p-calendar>
+        </div>
+    </div>
+    <div class="form-group">
+        <div class="p-field p-col-12 p-md-6">
+            <label for="Date_Der_Maint">Date_Der_Maint</label>
+            <p-calendar formControlName="Date_Der_Maint" [showTime]="true" inputId="Date_Der_Maint"></p-calendar>
+        </div>
+    </div>
+    <div class="form-group">
+        <div class="p-field p-col-12 p-md-6">
+            <label for="Echeance">Echeance</label>
+            <p-calendar formControlName="Echeance" [showTime]="true" inputId="Echeance"></p-calendar>
+        </div>
+    </div> 
+     <div class="form-group">
+         <label for="Code_Etat_Maint">Code_Etat_Maint</label>
+         <input type="text" id="Code_Etat_Maint"   pInputText name="Code_Etat_Maint"  formControlName="Code_Etat_Maint"  />
+       
+        </div>
+     <div class="form-group">
+         <label for="Code_Maint">Code_Maint</label>
+         <input type="text" id="Code_Maint"   pInputText name="Code_Maint"  formControlName="Code_Maint"  />
+       
+        </div>
+     <div class="form-group">
+         <label for="Num_Alerte">Num_Alerte</label>
+         <input type="text" id="Num_Alerte"  pInputText name="Num_Alerte"  formControlName="Num_Alerte"  />
+       
+        </div>
+        <div class="form-group">
+            <div class="p-field p-col-12 p-md-6">
+                <label for="Date_Init">Date_Init</label>
+                <p-calendar formControlName="Date_Init" [showTime]="true" inputId="Date_Init"></p-calendar>
+            </div>
+        </div>
+    <div class="form-group">
+        <label for="Arret">Arret</label>
+        <input type="text" id="Arret"  pInputText name="Arret"  formControlName="Code_Maint"  />
+       
+    </div>
+    <div class="form-group">
+        <label for="Garantie">Garantie</label>
+        <input type="text" id="Garantie"   pInputText name="Garantie"  formControlName="Garantie"  />
+       
+    </div>
+    <div class="form-group">
+        <div class="p-field p-col-12 p-md-6">
+            <label for="Date_fin_Garantie">Date_fin_Garantie</label>
+            <p-calendar formControlName="Date_fin_Garantie" [showTime]="true" inputId="Date_fin_Garantie"></p-calendar>
+        </div>
+    </div>
+    <div class="form-group">
+        <label for="Observation">Observation</label>
+        <input type="text" id="Observation"   pInputText name="Observation"  formControlName="Observation"  />
+       
+    </div>
+    <div class="form-group">
+        <div class="p-field p-col-12 p-md-6">
+            <label for="J_ddm">J_ddm</label>
+            <p-calendar formControlName="J_ddm" [showTime]="true" inputId="J_ddm"></p-calendar>
+        </div>
+    </div>    
+    </form>
+ </ng-template>
+    
+    <ng-template pTemplate="footer">
+        <button pButton pRipple label="Cancel" icon="pi pi-times" class="p-button-text" (click)="hideDialog()"></button>
+        <button pButton pRipple label="Save" icon="pi pi-check" class="p-button-text" (click)="saveprevenitiveperiodique()"></button>
+    </ng-template>
+</p-dialog>
+
+<p-confirmDialog [style]="{width: '450px'}"></p-confirmDialog>

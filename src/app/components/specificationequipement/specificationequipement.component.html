@@ -1,0 +1,163 @@
+<p-toast></p-toast>
+<div class="card">
+    <p-toolbar styleClass="p-mb-4">
+        <ng-template pTemplate="left">
+            <button pButton pRipple label="New" icon="pi pi-plus" class="p-button-success p-mr-2" (click)="openNew()"></button>
+            <button pButton pRipple  icon="pi pi-trash" class="p-button-danger" (click)="deleteSelectedSpecificationEquip()" [disabled]="!selectedSpecificationEquips || !selectedSpecificationEquips.length"></button>
+        </ng-template>
+
+        <ng-template pTemplate="right">
+            <p-fileUpload mode="basic" accept="image/*" [maxFileSize]="1000000" label="Import" chooseLabel="Import" class="p-mr-2 p-d-inline-block"></p-fileUpload>
+            <button pButton pRipple label="Export" icon="pi pi-upload" class="p-button-help"></button>
+        </ng-template>
+    </p-toolbar>
+
+    <p-table #dt [value]="specificationequips" [rows]="10" [paginator]="true" [globalFilterFields]="['id_equip','id_spec','Valeur','Id_TypeS']"
+        [(selection)]="selectedSpecificationEquips" [rowHover]="true" dataKey="id"
+        currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries" [showCurrentPageReport]="true">
+     
+        <ng-template pTemplate="header">
+            <tr>
+                <th style="width: 3rem">
+                    <p-tableHeaderCheckbox></p-tableHeaderCheckbox>
+                </th>
+                <th pSortableColumn="id_equip">Equipement<p-sortIcon field="id_equip"></p-sortIcon></th>
+                <th pSortableColumn="id_spec">Specification <p-sortIcon field="id_spec"></p-sortIcon></th>
+               <th pSortableColumn="Valeur">Valeur <p-sortIcon field="Valeur"></p-sortIcon></th>
+               <th pSortableColumn="Id_TypeS">Type Specification <p-sortIcon field="Id_TypeS"></p-sortIcon></th>
+     
+
+                <th></th>
+            </tr>
+        </ng-template>
+        <ng-template pTemplate="body" let-specificationequip>
+            <tr>
+                <td>
+                    <p-tableCheckbox [value]="specificationequip"></p-tableCheckbox>
+                </td>
+                <td>{{specificationequip.DesignationEquip}}</td>
+                <td>{{specificationequip.DesignationtSpec}}</td>
+                <td>{{specificationequip.Valeur}}</td>
+                <td>{{specificationequip.DesignationtTypeSpec}}</td>
+               
+                
+                <td>
+                    <button pButton pRipple icon="pi pi-pencil" class="p-button-rounded p-button-success p-mr-2" (click)="editSpecificationEquipement(specificationequip)"></button>
+                    <button pButton pRipple icon="pi pi-trash" class="p-button-rounded p-button-warning" (click)="onDelete(specificationequip)"></button>
+                </td>
+            </tr>
+        </ng-template>
+        <ng-template pTemplate="summary">
+            <div class="p-d-flex p-ai-center p-jc-between">
+                In total there are {{specificationequips ? specificationequips.length : 0 }} specificationequips.
+            </div>
+        </ng-template>
+    </p-table>
+</div>
+<!-- 
+<p-dialog [(visible)]="emplacementDialog" [style]="{width: '450px'}" header="emplacement Details" [modal]="true" styleClass="p-fluid">
+    <ng-template pTemplate="content" *ngIf="emplacementFormGroupe">
+        
+       <form [formGroup]="emplacementFormGroupe">
+        <div class="form-group" >
+            <label>Designation</label>
+            <input type="text" name="Designation" pInputText formControlName="Designation" />
+            
+        </div>
+        <div class="form-group">
+            <label >Actif</label>
+            <input name="Actif" pInputTextarea  rows="3" formControlName="Actif" cols="20"/>
+        </div>
+        <div class="form-group">
+            <label >CodeEmpl</label>
+            <input name="CodeEmpl" pInputTextarea  rows="3" formControlName="CodeEmpl" cols="20"/>
+        </div>
+        <div class="form-group">
+            <label >J_ddm</label>
+            <input name="J_ddm" pInputTextarea  rows="3" formControlName="J_ddm" cols="20"/>
+        </div>
+        <div class="form-group">
+            <label >site</label>
+            <input name="idSite" pInputTextarea  rows="3" formControlName="idSite" cols="20"/>
+        </div>
+        <div class="form-group">
+            <label >TypeEmplacement</label>
+            <input name="idTypeEmpl" pInputTextarea  rows="3" formControlName="idTypeEmpl" cols="20"/>
+        </div>
+      
+
+    </form>
+
+      
+    </ng-template>
+    
+    <ng-template pTemplate="footer">
+        <button pButton pRipple label="Cancel" icon="pi pi-times" class="p-button-text" (click)="hideDialog()"></button>
+        <button pButton pRipple label="Save" icon="pi pi-check" class="p-button-text" (click)="saveEmplacement()"></button>
+    </ng-template>
+</p-dialog> -->
+
+
+
+<p-dialog [(visible)]="specificationequipDialog" [style]="{width: '900px'}" header="Specification Equipement Details" [modal]="true" styleClass="row ">
+    <ng-template pTemplate="content" *ngIf="specificationequipFormGroupe">        
+       <form [formGroup]="specificationequipFormGroupe">
+        <div class="row ">
+        <div class="p-field p-col-12 p-md-4">
+            <label class="col-sm-4 col-form-label">Equipement</label>
+             <div class="form-group row">
+                 
+                 <div class="col-sm-12 p-md-6">
+                     <select id="id_equip"  class="form-control" formControlName="id_equip">
+                         <option *ngFor="let s of equipements" value="{{s.id}}">{{s.Designation}}</option>
+                     </select>
+                 </div>
+             </div>
+            </div>
+             <div class="p-field p-col-12 p-md-4" >
+                <label class="col-sm-4 col-form-label">Specification</label>
+                    <div class="form-group row">
+                        <div class="col-sm-12 p-md-6">
+                            <select id="id_spec"   class="form-control" formControlName="id_spec">
+                                <option *ngFor="let t of specifications" value="{{t.id}}">{{t.Designation}}</option>
+                             
+                            </select>
+                        </div>
+                    </div>
+                </div> 
+                  
+         <div class="p-field p-col-10 p-md-4">
+            <label for="Valeur" class="col-10">Valeur</label>
+            <div class="form-group row">
+            
+            <input type="text" id="Valeur"  class="col-12" pInputText name="Valeur"  formControlName="Valeur"  />
+            </div>
+           
+        </div>
+        <div class="p-field p-col-12 p-md-4" >
+            <label class="col-sm-12 col-form-label">Type Specification</label>
+                <div class="form-group row">
+                    <div class="col-sm-12 p-md-6">
+                        <select id="Id_TypeS"   class="form-control" formControlName="Id_TypeS">
+                            <option *ngFor="let t of typespecifications" value="{{t.id}}">{{t.Designation}}</option>
+                         
+                        </select>
+                    </div>
+                </div>
+            </div>
+        </div>
+    
+    
+     
+   
+     
+    </form>
+ </ng-template>
+    
+    <ng-template pTemplate="footer">
+        <button pButton pRipple label="Cancel" icon="pi pi-times" class="p-button-text" (click)="hideDialog()"></button>
+        <button pButton pRipple label="Save" icon="pi pi-check" class="p-button-text" (click)="saveSpecificationequipement()"></button>
+    </ng-template>
+</p-dialog>
+
+<p-confirmDialog [style]="{width: '450px'}"></p-confirmDialog>
